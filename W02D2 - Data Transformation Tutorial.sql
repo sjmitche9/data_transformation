@@ -39,7 +39,8 @@ WHERE
 	END;
 
 
-SELECT quantity, discount
+SELECT quantity, 
+	   discount
 FROM order_details
 WHERE 
 	(discount = 0 AND quantity < 10) OR 
@@ -96,7 +97,7 @@ SELECT
 	o.orderdate,
 	o.freight,
     --o.shipvia,
-	SUM(o.freight) OVER( --same syntax as AVG(), MIN(), MAX(), COUNT()
+	MIN(o.freight) OVER( --same syntax as AVG(), MIN(), MAX(), COUNT()
 		PARTITION BY o.shipvia
 		ORDER BY o.orderdate) AS running_total 
 FROM orders o
@@ -125,7 +126,7 @@ SELECT
 	o.orderdate,
 	o.freight,
     -- o.shipvia,
-	NTH_VALUE(o.freight, 3) OVER(
+	NTH_VALUE(o.freight, 50) OVER(
 		PARTITION BY o.shipvia
 		ORDER BY o.orderdate) 
 FROM orders o
@@ -138,7 +139,7 @@ SELECT
 	s.companyname,
 	o.orderdate,
 	o.freight,
-	LEAD(o.freight) OVER( --same syntax as LAG() --try different offsets
+	LEAD(o.freight, 3) OVER( --same syntax as LAG() --try different offsets
 		PARTITION BY o.shipvia
 		ORDER BY o.orderdate) AS subsequent_freight
 FROM
@@ -167,8 +168,8 @@ JOIN shippers s ON o.shipvia = s.shipperid;
 SELECT
 	s.companyname,
 	o.freight,
-    o.shipvia,
-	NTILE(10) OVER(
+    -- o.shipvia,
+	NTILE(3) OVER(
 		PARTITION BY o.shipvia
 		ORDER BY o.freight) AS tiles
 FROM orders o
