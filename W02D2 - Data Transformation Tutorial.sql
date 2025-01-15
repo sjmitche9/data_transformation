@@ -8,13 +8,14 @@
 -- In the order_details table, classify each row based on their quantity:
 -- 'large' (>40), 'medium' (<=40 and >20), or 'small' (<=20)
 SELECT
-	quantity,
+	quantity, discount,
 	CASE
 		WHEN quantity > 40 THEN 'large'
 		WHEN quantity <= 20 THEN 'small'
 		ELSE 'medium'
 	END AS quantity_class
 FROM order_details;
+
 
 
 SELECT
@@ -55,8 +56,8 @@ WHERE
 -- Try casting as VARCHAR(9)
 SELECT
 	orderdate,
-	CAST(orderdate AS VARCHAR(10)) AS orderdate_string
-	-- orderdate::VARCHAR(10) AS orderdate_string
+	--CAST(orderdate AS VARCHAR(10)) AS orderdate_string
+	orderdate::VARCHAR(10) AS orderdate_string
 FROM orders;
 
 
@@ -97,7 +98,7 @@ SELECT
 	o.orderdate,
 	o.freight,
     --o.shipvia,
-	MIN(o.freight) OVER( --same syntax as AVG(), MIN(), MAX(), COUNT()
+	COUNT(o.freight) OVER( --same syntax as AVG(), MIN(), MAX(), COUNT()
 		PARTITION BY o.shipvia
 		ORDER BY o.orderdate) AS running_total 
 FROM orders o
@@ -169,14 +170,14 @@ SELECT
 	s.companyname,
 	o.freight,
     -- o.shipvia,
-	NTILE(3) OVER(
+	NTILE(4) OVER(
 		PARTITION BY o.shipvia
 		ORDER BY o.freight) AS tiles
 FROM orders o
 JOIN shippers s ON o.shipvia = s.shipperid;
 
 
--- USER DEFINED FINCTIONS
+-- USER DEFINED FUNCTIONS
 -------------------------------------------------------------------------------------------
 
 -- user defined function example
