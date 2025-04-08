@@ -1,4 +1,3 @@
--- W04L1 - Data Transformation
 
 
 -- CASE
@@ -181,23 +180,23 @@ JOIN shippers s ON o.shipvia = s.shipperid;
 -------------------------------------------------------------------------------------------
 
 -- user defined function example
-CREATE OR REPLACE FUNCTION calc_total_price(input_orderid INTEGER)
-RETURNS NUMERIC AS $$
-DECLARE
-	total_price NUMERIC := 0;
-BEGIN
-	SELECT SUM(unitprice * quantity * (1 - discount))
-	INTO total_price
-	FROM order_details
-	WHERE orderid = input_orderid;
+-- CREATE OR REPLACE FUNCTION calc_total_price(input_orderid INTEGER)
+-- RETURNS NUMERIC AS $$
+-- DECLARE
+-- 	total_price NUMERIC := 0;
+-- BEGIN
+-- 	SELECT SUM(unitprice * quantity * (1 - discount))
+-- 	INTO total_price
+-- 	FROM order_details
+-- 	WHERE orderid = input_orderid;
 
-	RETURN total_price;
-END;
+-- 	RETURN total_price;
+-- END;
 
-$$ LANGUAGE plpgsql;
+-- $$ LANGUAGE plpgsql;
 
--- function execution
-SELECT
-	orderid,
-	calc_total_price(orderid)
-FROM orders;
+-- -- function execution
+-- SELECT
+-- 	orderid,
+-- 	calc_total_price(orderid)
+-- FROM orders;
